@@ -23,7 +23,7 @@ public class Ricochet : MonoBehaviour
     {
         if (numRicochets == 0)
         {
-            return;
+            Destroy(gameObject);
         }
         float speed = velocity.magnitude;
         Vector3 direction = Vector3.Reflect(velocity.normalized, collision.contacts[0].normal);

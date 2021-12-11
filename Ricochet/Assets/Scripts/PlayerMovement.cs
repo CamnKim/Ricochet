@@ -7,8 +7,9 @@ public class PlayerMovement : MonoBehaviour
     // Inspector settable values
     public int nonGroundedJumps = 1;
     // Player's speed
-    [Range(0, 50)]
-    public float speed = 10;
+    float speed;
+    public float walkSpeed = 5;
+    public float sprintSpeed = 15;
     // Player's sensitivity
     [Range(0, 10)]
     public float sens = 5;
@@ -38,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         cc = GetComponent<CapsuleCollider>();
         anim = GetComponent<Animator>();
         cam = GetComponentInChildren<Camera>();
+        speed = walkSpeed;
 
         standingHeight = cc.height;
         numJumps = nonGroundedJumps;
@@ -91,6 +93,16 @@ public class PlayerMovement : MonoBehaviour
         {
             arms.SetTrigger("Inspect");
         }
+
+        // Sprint
+        if (Input.GetButtonDown("Sprint"))
+        {
+            speed = sprintSpeed;
+        }
+        if(Input.GetButtonUp("Sprint"))
+        {
+            speed = walkSpeed;
+        }
     }
 
     void FixedUpdate()
@@ -118,20 +130,16 @@ public class PlayerMovement : MonoBehaviour
     private void Animating(float h, float v)
     {
         bool movingForward = v > 0f;
-        anim.SetBool("isMovingForward", movingForward);
         arms.SetBool("Walk", movingForward);
 
         bool movingBackward = v < 0f;
-        anim.SetBool("isMovingBackward", movingBackward);
-        arms.SetBool("Walk", movingForward);
+        arms.SetBool("Walk", movingBackward);
 
-        bool movingLeft = h < 0f && v == 0f;
-        anim.SetBool("isMovingLeft", movingLeft);
-        arms.SetBool("Walk", movingForward);
+        bool movingLeft = h < 0f;
+        arms.SetBool("Walk", movingLeft);
 
-        bool movingRight = h > 0f && v == 0f;
-        anim.SetBool("isMovingRight", movingRight);
-        arms.SetBool("Walk", movingForward);
+        bool movingRight = h > 0f;
+        arms.SetBool("Walk", movingRight);
 
     }
 

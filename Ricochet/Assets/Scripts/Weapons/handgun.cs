@@ -7,25 +7,31 @@ public class handgun : MonoBehaviour
     public GameObject bullet;
     // bullet stats
     public int ricochets;
+    public int maxAmmo = 12;
+    public int damage = 35;
+    public int currentAmmo;
     public float velocity;
 
     // gun stats
     public float timeBetweenShots, timeBetweenShooting, range;
 
-    bool shooting, readyToShoot;
+    public bool shooting, reload, readyToShoot;
 
     public Camera fpsCam;
     // tip of gun
     public Transform muzzle;
 
     public bool allowInvoke = true;
-    
+
+    public Animation reloadAnim;
     public Animator arms;
     public AudioClip gunshot;
     private AudioSource gunAudio;
+
     private void Awake()
     {
         readyToShoot = true;
+        currentAmmo = maxAmmo;
     }
 
     void Start()
@@ -42,16 +48,26 @@ public class handgun : MonoBehaviour
     void MyInput()
     {
         shooting = Input.GetButtonDown("Fire1");
+        reload = Input.GetButtonDown("Reload");
 
         if (readyToShoot && shooting)
         {
             Shoot();
         }
+        if (reload)
+        {
+            Reload();
+        }
     }
 
     void Shoot()
     {
+        if (currentAmmo == 0)
+        {
+            return;
+        }
         readyToShoot = false;
+        currentAmmo--;
 
         // Find where the bullet will hit (ray through middle of screen)
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
@@ -84,7 +100,11 @@ public class handgun : MonoBehaviour
         gunAudio.clip = gunshot;
         gunAudio.Play();
 
-
+        
+        if (currentAmmo == 0)
+        {
+            arms.SetBool("Out Of Ammo Slider", true);
+        }
         // Invoke resetShot
         if (allowInvoke)
         {
@@ -98,4 +118,19 @@ public class handgun : MonoBehaviour
         readyToShoot = true;
         allowInvoke = true;
     }
+
+    private void Reload()
+    {
+        if (currentAmmo == maxAmmo) return;
+        readyToShoot = false;
+        if (currentAmmo > 0)
+        {
+            arms.SetTrigger("Reload");
+        }
+        else
+        {
+            arms.SetTrigger("Reload Empty");
+        }
+    }
+
 }
