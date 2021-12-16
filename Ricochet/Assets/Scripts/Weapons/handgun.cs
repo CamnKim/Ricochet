@@ -26,6 +26,7 @@ public class handgun : MonoBehaviour
     public Animation reloadAnim;
     public Animator arms;
     public AudioClip gunshot;
+    public AudioClip reloadAudio, reloadEmptyAudio;
     private AudioSource gunAudio;
 
     private void Awake()
@@ -126,10 +127,14 @@ public class handgun : MonoBehaviour
         if (currentAmmo > 0)
         {
             arms.SetTrigger("Reload");
+            gunAudio.clip = reloadAudio;
+            gunAudio.Play();
         }
         else
         {
             arms.SetTrigger("Reload Empty");
+            gunAudio.clip = reloadEmptyAudio;
+            gunAudio.Play();
         }
     }
 

@@ -25,8 +25,10 @@ public class PlayerMovement : MonoBehaviour
     private CapsuleCollider cc;
     private Animator anim;
     private Camera cam;
-    public Animator arms;
+    public Animator P_arms;
+    public Animator R_arms;
     private bool isJumping = false;
+    private bool isSprinting = false;
     private int numJumps;
     private Vector3 movement;
     private float standingHeight;
@@ -73,7 +75,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 numJumps -= 1;
             }
-            Debug.Log("Jumped");
         }
 
         // Crouch
@@ -85,23 +86,23 @@ public class PlayerMovement : MonoBehaviour
         {
             cc.height = standingHeight;
         }
-        Debug.Log(isGrounded());
-        Debug.Log(numJumps);
 
         // Inspect
-        if (Input.GetButtonDown("Inspect"))
-        {
-            arms.SetTrigger("Inspect");
-        }
+        //if (Input.GetButtonDown("Inspect"))
+        //{
+        //    P_arms.SetTrigger("Inspect");
+        //}
 
         // Sprint
         if (Input.GetButtonDown("Sprint"))
         {
             speed = sprintSpeed;
+            isSprinting = true;
         }
         if(Input.GetButtonUp("Sprint"))
         {
             speed = walkSpeed;
+            isSprinting = false;
         }
     }
 
@@ -129,17 +130,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void Animating(float h, float v)
     {
-        bool movingForward = v > 0f;
-        arms.SetBool("Walk", movingForward);
-
-        bool movingBackward = v < 0f;
-        arms.SetBool("Walk", movingBackward);
-
-        bool movingLeft = h < 0f;
-        arms.SetBool("Walk", movingLeft);
-
-        bool movingRight = h > 0f;
-        arms.SetBool("Walk", movingRight);
+        if (v != 0f || h != 0f)
+        {
+            P_arms.SetBool("Walk", true);
+            R_arms.SetBool("Walk", true);
+            if (isSprinting)
+            {
+                P_arms.SetBool("Walk", false);
+                P_arms.SetBool("Run", true);
+                R_arms.SetBool("Walk", false);
+                R_arms.SetBool("Run", true);
+            }
+        }
+        else
+        {
+            P_arms.SetBool("Walk", false);
+            P_arms.SetBool("Run", false);
+            R_arms.SetBool("Walk", false);
+            R_arms.SetBool("Run", false);
+        }
 
     }
 

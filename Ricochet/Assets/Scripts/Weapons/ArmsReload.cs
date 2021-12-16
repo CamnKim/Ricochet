@@ -27,5 +27,8 @@ public class ArmsReload : MonoBehaviour
     {
         gun.GetComponent<handgun>().arms.SetBool("Out Of Ammo Slider", false);
     }
-
+    public void Unholster()
+    {
+        gun.GetComponent<handgun>().readyToShoot = true;
+    }
 }
