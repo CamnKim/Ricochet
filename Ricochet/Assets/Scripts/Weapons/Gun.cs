@@ -13,7 +13,7 @@ public class Gun : MonoBehaviour
 
     // weapon stats
     public float timeBetweenShooting, spread, reloadTime, reloadTimeEmpty, timeBetweenShots;
-    public int maxAmmo, ricochets;
+    public int maxAmmo, ricochets, damage;
     public bool fullAuto;
 
     int bulletsLeft, bulletsShot;
@@ -55,8 +55,6 @@ public class Gun : MonoBehaviour
         // update ammo display
         UpdateDisplay();
 
-        Debug.Log("ready to shoot: " + readyToShoot);
-        Debug.Log("invoke: " + allowInvoke);
     }
 
     private void MyInput()
@@ -80,7 +78,6 @@ public class Gun : MonoBehaviour
 
     private void Shoot()
     {
-        Debug.Log("shoot");
         readyToShoot = false;
 
         // set audio clip
@@ -107,6 +104,7 @@ public class Gun : MonoBehaviour
         // instantiate bullet prefab
         GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity);
         currentBullet.GetComponent<Ricochet>().numRicochets = ricochets;
+        currentBullet.GetComponent<Ricochet>().damage = damage;
         // rotate bullet to shoot direction
         currentBullet.transform.forward = direction.normalized;
 
