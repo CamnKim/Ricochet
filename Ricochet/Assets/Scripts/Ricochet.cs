@@ -7,9 +7,13 @@ public class Ricochet : MonoBehaviour
     private Rigidbody rb;
     Vector3 velocity;
     public int numRicochets;
+    public int maxRicochet;
     public int damage;
     public float damageRange;
+    public float destructTime = 10;
+    private float timer = 0;
     // Start is called before the first frame update
+    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -18,13 +22,9 @@ public class Ricochet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer += Time.deltaTime;
+        if (timer >= destructTime) Destroy(gameObject);
         velocity = rb.velocity;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, damageRange);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -32,7 +32,6 @@ public class Ricochet : MonoBehaviour
         if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy"))
         {
             DealDamage();
-            
         }
 
         if (numRicochets == 0)
@@ -54,8 +53,14 @@ public class Ricochet : MonoBehaviour
         {
             if (enemy.CompareTag("Player"))
             {
-                Debug.Log("Damaged");
-                enemy.GetComponent<PlayerHealth>().TakeDamage(damage);
+                //Debug.Log("Damaged");
+                enemy.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage);
+            }
+            if (enemy.CompareTag("Enemy"))
+            {
+                enemy.gameObject.GetComponent<EnemyAI>().TakeDamage(damage);
+                enemy.gameObject.GetComponent<EnemyAI>().scoreHit(numRicochets, maxRicochet);
+                
             }
         }
         Invoke("Delay", 0.05f);

@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     public int invert = -1;
     public float viewRange = 1;
 
+    public bool isDead = false;
+
 
     
     private Rigidbody rb;
@@ -50,6 +52,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+        {
+            return;
+        }
         // Horizontal mouse movement
         transform.Rotate(Vector3.up * Input.GetAxisRaw("Mouse X") * sens);
 
@@ -109,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         // Movement
+        if (isDead) return;
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         move(h, v);

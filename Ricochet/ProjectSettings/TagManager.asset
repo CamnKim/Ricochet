@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Arms
+  - Enemy
+  - Spawn
+  - Win
   layers:
   - Default
   - TransparentFX

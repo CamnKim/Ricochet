@@ -105,6 +105,7 @@ public class Gun : MonoBehaviour
         GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity);
         currentBullet.GetComponent<Ricochet>().numRicochets = ricochets;
         currentBullet.GetComponent<Ricochet>().damage = damage;
+        currentBullet.GetComponent<Ricochet>().maxRicochet = ricochets;
         // rotate bullet to shoot direction
         currentBullet.transform.forward = direction.normalized;
 
